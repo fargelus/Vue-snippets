@@ -3,6 +3,7 @@ window.onload = function() {
       el: '#app',
       data: {
         greetings: 'Greetings your majesty!',
+        name: '',
       },
   });
 }
