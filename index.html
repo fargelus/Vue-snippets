@@ -6,15 +6,14 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Vue examples</title>
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-  <script src="2_way_binding/hello_vue.js"></script>
 </head>
+
 <body>
   <div id="app">
-    <h1>Hello, {{ name ? name : 'stranger' }}!</h1>
-    <label for="name-input">
-      Enter your name:
-    </label>
-    <input v-model="name" id="name-input">
+    <greetings></greetings>
   </div>
+
+  <script src="scripts/components/2_way_binding.js"></script>
+  <script src="scripts/entrypoint.js"></script>
 </body>
 </html>
