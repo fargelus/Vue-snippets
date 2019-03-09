@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Vue list rendering examples</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Lets hear some quotes</h1>
+
+    <ul>
+      <li v-for="quote in quotes">{{ quote.author }} said &laquo;{{ quote.phrase }}&raquo;</li>
+    </ul>
+
+    <h3>Only Yoda quotes</h3>
+    <p>Yoda said: {{quotes | yoda}}</p>
+  </div>
+
+  <script>
+    new Vue({
+      el: '.container',
+
+      data: {
+        quotes: [
+          {
+            phrase: 'With great power comes great responsibility',
+            author: 'Uncle Ben',
+          },
+          {
+            phrase: 'We are living in the yellow submarine',
+            author: 'The Beatles',
+          },
+          {
+            phrase: 'Fear is the path to darkside',
+            author: 'Yoda',
+          },
+        ],
+      },
+
+      filters: {
+        yoda: (value) => {
+          return value.find((el) => {
+            return el.author === 'Yoda';
+          });
+        },
+      }
+    });
+  </script>
+
+</body>
+</html>
