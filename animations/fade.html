@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Vue.js animations</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+  <div id="demo">
+    <button @click="show = !show">Переключить</button>
+    <transition name="fade">
+      <p v-if="show">Привет</p>
+    </transition>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#demo',
+      data: {
+        show: false,
+      },
+    });
+  </script>
+
+  <style>
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s;
+    }
+
+    .fade-enter, .fade-leave-to {
+      opacity: 0;
+    }
+  </style>
+</body>
+</html>
