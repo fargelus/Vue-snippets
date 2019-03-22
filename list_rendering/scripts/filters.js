@@ -4,13 +4,14 @@ Vue.component('Filters', {
     <h1>Lets hear some quotes</h1>
 
     <ul>
-      <li v-for="quote in orderedByUpvotes">
+      <li v-for="quote in filteredQuotes">
         {{ quote.author }} said &laquo;{{ quote.phrase }}&raquo;
         (upvoted {{ quote.upvotes }} times)
       </li>
     </ul>
 
     <button type="button" @click="reverseOrder">Reverse quotes order</button>
+    <button type="button" @click="changePopularityMode">{{ popularityPhrase.current }}</button>
 
     <h3>Only Yoda quotes</h3>
     <p>Yoda said: {{quotes | yoda}}</p>
@@ -44,6 +45,12 @@ Vue.component('Filters', {
     return {
       query: '',
       order: 1,
+      popularityPhrase: {
+        famous: 'Show famous stories',
+        reset: 'Show all stories',
+        current: 'Show famous stories',
+      },
+      filteredQuotes: [],
       quotes: [
         {
           phrase: 'With great power comes great responsibility',
@@ -64,9 +71,29 @@ Vue.component('Filters', {
     };
   },
 
+  created() {
+    this.filteredQuotes = this.orderedByUpvotes();
+  },
+
   methods: {
+    orderedByUpvotes() {
+      const that = this;
+      return _.sortBy(this.quotes, (quote) => {
+        return quote.upvotes * this.order;
+      });
+    },
+
     reverseOrder() {
       this.order *= -1;
+      this.filteredQuotes = this.orderedByUpvotes();
+    },
+
+    changePopularityMode() {
+      const { popularityPhrase } = this;
+      const { current, famous, reset } = popularityPhrase;
+
+      const isFamous = current === famous;
+      popularityPhrase.current = isFamous ? reset : famous;
     },
   },
 
@@ -78,18 +105,12 @@ Vue.component('Filters', {
         return searchDest.includes(inputPhrase);
       });
     },
-
-    orderedByUpvotes() {
-      const that = this;
-      return _.sortBy(this.quotes, (quote) => {
-        return quote.upvotes * that.order;
-      });
-    },
   },
 
   filters: {
     yoda: (value) => {
-      return value.find(el => el.author === 'Yoda');
+      const yodaPhrase = value.find(el => el.author === 'Yoda');
+      return _.isObject(yodaPhrase) ? `"${yodaPhrase.phrase}"` : 'nothing';
     },
   }
 });
