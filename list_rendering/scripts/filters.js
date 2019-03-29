@@ -30,7 +30,7 @@ Vue.component('Filters', {
         <h3>Search results:</h3>
         <ul v-if="filterByQuery.length" class="list-group">
           <li class="list-group-item" v-for="filtered in filterByQuery">
-            &laquo;{{ filtered.phrase }}&raquo;
+            &laquo;{{ filtered.phrase }}&raquo; said {{ filtered.author }}
           </li>
         </ul>
         <div v-else>
@@ -46,9 +46,9 @@ Vue.component('Filters', {
       query: '',
       order: 1,
       popularityPhrase: {
-        famous: 'Show famous stories',
-        reset: 'Show all stories',
-        current: 'Show famous stories',
+        famous: 'Show famous quotes',
+        reset: 'Show all quotes',
+        current: 'Show famous quotes',
       },
       filteredQuotes: [],
       quotes: [
@@ -72,28 +72,46 @@ Vue.component('Filters', {
   },
 
   created() {
-    this.filteredQuotes = this.orderedByUpvotes();
+    this.showAllQuotes();
   },
 
   methods: {
+    showAllQuotes() {
+      this.filteredQuotes = this.quotes;
+      this.orderedByUpvotes();
+    },
+
     orderedByUpvotes() {
       const that = this;
-      return _.sortBy(this.quotes, (quote) => {
+      const quotes = this.filteredQuotes;
+
+      this.filteredQuotes = _.sortBy(quotes, (quote) => {
         return quote.upvotes * this.order;
       });
     },
 
     reverseOrder() {
       this.order *= -1;
-      this.filteredQuotes = this.orderedByUpvotes();
+      this.orderedByUpvotes();
     },
 
     changePopularityMode() {
       const { popularityPhrase } = this;
       const { current, famous, reset } = popularityPhrase;
 
-      const isFamous = current === famous;
-      popularityPhrase.current = isFamous ? reset : famous;
+      const showFamous = current === famous;
+      if (showFamous) {
+        this.showFamousQuotes();
+        popularityPhrase.current = reset;
+      } else {
+        this.showAllQuotes();
+        popularityPhrase.current = famous;
+      }
+    },
+
+    showFamousQuotes() {
+      const quotes = this.filteredQuotes;
+      this.filteredQuotes = _.filter(quotes, q => q.upvotes > 20);
     },
   },
 
